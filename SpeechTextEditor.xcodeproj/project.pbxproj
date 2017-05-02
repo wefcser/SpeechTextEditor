@@ -8,12 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		D9066C191EB89C2D006B0F78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C181EB89C2D006B0F78 /* AppDelegate.swift */; };
-		D9066C1B1EB89C2D006B0F78 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C1A1EB89C2D006B0F78 /* ViewController.swift */; };
+		D9066C1B1EB89C2D006B0F78 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C1A1EB89C2D006B0F78 /* ListViewController.swift */; };
 		D9066C1E1EB89C2D006B0F78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9066C1C1EB89C2D006B0F78 /* Main.storyboard */; };
 		D9066C201EB89C2D006B0F78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9066C1F1EB89C2D006B0F78 /* Assets.xcassets */; };
 		D9066C231EB89C2D006B0F78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9066C211EB89C2D006B0F78 /* LaunchScreen.storyboard */; };
 		D9066C2E1EB89C2E006B0F78 /* SpeechTextEditorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C2D1EB89C2E006B0F78 /* SpeechTextEditorTests.swift */; };
 		D9066C391EB89C2E006B0F78 /* SpeechTextEditorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C381EB89C2E006B0F78 /* SpeechTextEditorUITests.swift */; };
+		D9066C471EB8A9F7006B0F78 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C461EB8A9F7006B0F78 /* TextViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +37,7 @@
 /* Begin PBXFileReference section */
 		D9066C151EB89C2D006B0F78 /* SpeechTextEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeechTextEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9066C181EB89C2D006B0F78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D9066C1A1EB89C2D006B0F78 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D9066C1A1EB89C2D006B0F78 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		D9066C1D1EB89C2D006B0F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D9066C1F1EB89C2D006B0F78 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D9066C221EB89C2D006B0F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +48,7 @@
 		D9066C341EB89C2E006B0F78 /* SpeechTextEditorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeechTextEditorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9066C381EB89C2E006B0F78 /* SpeechTextEditorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechTextEditorUITests.swift; sourceTree = "<group>"; };
 		D9066C3A1EB89C2E006B0F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9066C461EB8A9F7006B0F78 /* TextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,11 +100,12 @@
 			isa = PBXGroup;
 			children = (
 				D9066C181EB89C2D006B0F78 /* AppDelegate.swift */,
-				D9066C1A1EB89C2D006B0F78 /* ViewController.swift */,
+				D9066C1A1EB89C2D006B0F78 /* ListViewController.swift */,
 				D9066C1C1EB89C2D006B0F78 /* Main.storyboard */,
 				D9066C1F1EB89C2D006B0F78 /* Assets.xcassets */,
 				D9066C211EB89C2D006B0F78 /* LaunchScreen.storyboard */,
 				D9066C241EB89C2D006B0F78 /* Info.plist */,
+				D9066C461EB8A9F7006B0F78 /* TextViewController.swift */,
 			);
 			path = SpeechTextEditor;
 			sourceTree = "<group>";
@@ -259,8 +262,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9066C1B1EB89C2D006B0F78 /* ViewController.swift in Sources */,
+				D9066C1B1EB89C2D006B0F78 /* ListViewController.swift in Sources */,
 				D9066C191EB89C2D006B0F78 /* AppDelegate.swift in Sources */,
+				D9066C471EB8A9F7006B0F78 /* TextViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
