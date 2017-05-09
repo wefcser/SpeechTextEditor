@@ -15,6 +15,7 @@
 		D9066C2E1EB89C2E006B0F78 /* SpeechTextEditorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C2D1EB89C2E006B0F78 /* SpeechTextEditorTests.swift */; };
 		D9066C391EB89C2E006B0F78 /* SpeechTextEditorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C381EB89C2E006B0F78 /* SpeechTextEditorUITests.swift */; };
 		D9066C471EB8A9F7006B0F78 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C461EB8A9F7006B0F78 /* TextViewController.swift */; };
+		D98455251EC1AC1B0095D2EE /* TextModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D98455231EC1AC1B0095D2EE /* TextModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		D9066C381EB89C2E006B0F78 /* SpeechTextEditorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechTextEditorUITests.swift; sourceTree = "<group>"; };
 		D9066C3A1EB89C2E006B0F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9066C461EB8A9F7006B0F78 /* TextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
+		D98455241EC1AC1B0095D2EE /* TextModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TextModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				D9066C211EB89C2D006B0F78 /* LaunchScreen.storyboard */,
 				D9066C241EB89C2D006B0F78 /* Info.plist */,
 				D9066C461EB8A9F7006B0F78 /* TextViewController.swift */,
+				D98455231EC1AC1B0095D2EE /* TextModel.xcdatamodeld */,
 			);
 			path = SpeechTextEditor;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D98455251EC1AC1B0095D2EE /* TextModel.xcdatamodeld in Sources */,
 				D9066C1B1EB89C2D006B0F78 /* ListViewController.swift in Sources */,
 				D9066C191EB89C2D006B0F78 /* AppDelegate.swift in Sources */,
 				D9066C471EB8A9F7006B0F78 /* TextViewController.swift in Sources */,
@@ -511,6 +515,7 @@
 				D9066C3F1EB89C2E006B0F78 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D9066C401EB89C2E006B0F78 /* Build configuration list for PBXNativeTarget "SpeechTextEditorTests" */ = {
 			isa = XCConfigurationList;
@@ -519,6 +524,7 @@
 				D9066C421EB89C2E006B0F78 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D9066C431EB89C2E006B0F78 /* Build configuration list for PBXNativeTarget "SpeechTextEditorUITests" */ = {
 			isa = XCConfigurationList;
@@ -527,8 +533,22 @@
 				D9066C451EB89C2E006B0F78 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D98455231EC1AC1B0095D2EE /* TextModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D98455241EC1AC1B0095D2EE /* TextModel.xcdatamodel */,
+			);
+			currentVersion = D98455241EC1AC1B0095D2EE /* TextModel.xcdatamodel */;
+			path = TextModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D9066C0D1EB89C2D006B0F78 /* Project object */;
 }
