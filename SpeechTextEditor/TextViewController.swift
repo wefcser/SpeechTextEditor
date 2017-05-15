@@ -11,6 +11,8 @@ import CoreData
 
 class TextViewController: UIViewController,UITextViewDelegate{
     var textIndex:Int?
+    var textDate:Date?
+    var textContent:String?
     
     @IBOutlet weak var textView: UITextView!
     
@@ -40,7 +42,10 @@ class TextViewController: UIViewController,UITextViewDelegate{
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
         print(self.textIndex!)
-        self.textView.text="wefcser王乙飞"
+        if(self.textDate==nil){
+            self.textDate=NSDate() as Date
+        }
+        self.textView.text=textContent
     }
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
@@ -67,12 +72,14 @@ class TextViewController: UIViewController,UITextViewDelegate{
     
     @IBAction func back(_ sender: UIBarButtonItem) {
         print(self.navigationItem.title!)
+        self.textDate=nil
+        self.textContent=nil
         self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
         let text = NSEntityDescription.insertNewObject(forEntityName: "Text", into: context) as! Text
-        text.date=NSDate()
+        text.date=self.textDate! as NSDate
         text.content=self.textView.text
         
         let formatter = DateFormatter()

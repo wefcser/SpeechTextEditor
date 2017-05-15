@@ -5,6 +5,6 @@
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Text" positionX="-63" positionY="-18" width="128" height="73"/>
+        <element name="Text" positionX="-63" positionY="-18" width="128" height="75"/>
     </elements>
 </model>

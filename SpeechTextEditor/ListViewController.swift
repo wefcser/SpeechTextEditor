@@ -14,8 +14,10 @@ let context:NSManagedObjectContext = app.persistentContainer.viewContext
 
 class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataSource{
 
-    var items:[Date:String?] = [:]
+    let fetchRequest = NSFetchRequest<Text>(entityName:"Text")
+    var items:[Date:String] = [:]
     var keys:[Date] = []
+    var destDate:Date?=nil
     @IBOutlet weak var textList: UITableView!
     
     override func viewDidLoad() {
@@ -24,8 +26,11 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         // Do any additional setup after loading the view, typically from a nib.
         self.textList.delegate=self
         self.textList.dataSource=self
-        
-        let fetchRequest = NSFetchRequest<Text>(entityName:"Text")
+        // 本地数据查询遍历
+        // 查询条件设置
+        //fetchRequest.fetchLimit = 10 //限定查询结果的数量
+        //fetchRequest.fetchOffset = 0 //查询的偏移量
+
         //let predicate = NSPredicate(format: "", "")
         //fetchRequest.predicate = predicate
         
@@ -39,8 +44,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 self.items[text.date! as Date]=text.content?.substring(to: index!)
             }
             self.keys.sort()
-        }
-        catch {
+        }catch {
             fatalError("不能保存：\(error)")
         }
         
@@ -57,12 +61,17 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             let dest=segue.destination as! TextViewController
             dest.navigationItem.title="textView"
             dest.textIndex=3
+            dest.textDate=self.destDate
+            if(self.destDate != nil){
+                dest.textContent=self.items[self.destDate!]
+            }
         }
         print("prepare")
     }
     
     @IBAction func goTextView(_ sender: UIButton) {
         print("go")
+        self.destDate=nil
         self.performSegue(withIdentifier: "showTextView", sender: self)
         print("goback")
     }
@@ -90,10 +99,9 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             cell!.selectionStyle = .gray
             cell!.accessoryType = UITableViewCellAccessoryType.none
         }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateString = formatter.string(from: keys[indexPath.row] as Date)
-        cell!.textLabel?.text=dateString
+        //date to string
+        cell!.textLabel?.text = date2String(date: keys[indexPath.row])
+        cell!.detailTextLabel?.text = items[keys[indexPath.row]]
         //cell!.contentView.
         //cell!.imageView?.image = UIImage(named:"cellImage.png")
         //cell!.detailTextLabel?.text = "详细信息介绍"
@@ -108,6 +116,12 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         let cell:UITableViewCell! = tableView.cellForRow(at: indexPath)
         
         print(cell!.textLabel?.text!)
+        
+        print("go")
+        self.destDate=self.keys[indexPath.row]
+        self.performSegue(withIdentifier: "showTextView", sender: self)
+        print("goback")
+
         
     }
     /*
@@ -124,16 +138,49 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }*/
     //
     //自定义编辑操作,自定义按钮样式
-//    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-////        let deleteAction:UITableViewRowAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "删除", handler: {(action:UITableViewRowAction,indexPath: IndexPath) in
-////            let index=indexPath.row as Int
-////            self.items.remove(at: index)
-////            self.textList.deleteRows(at: [indexPath], with: UITableViewRowAnimation.top)
-////            NSLog("删除\(indexPath.row)")
-//        })
-//        //deleteAction.backgroundColor = UIColor.green
-//        deleteAction.backgroundEffect = UIBlurEffect(style:UIBlurEffectStyle.dark)
-//        return [deleteAction]
-//    }
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let deleteAction:UITableViewRowAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "删除", handler: {(action:UITableViewRowAction,indexPath: IndexPath) in
+            //临时信息删除
+            let index:Int = indexPath.row
+            let date:Date = self.keys[index]
+            self.keys.remove(at: index)
+            self.items.removeValue(forKey: date)
+            self.textList.deleteRows(at: [indexPath], with: UITableViewRowAnimation.top)
+            //本地数据删除
+            let dateString = date.description
+            print(dateString)
+            //设置查询条件
+            //let predicate = NSPredicate(format: "date = '"+dateString+"'", "")
+            //self.fetchRequest.predicate = predicate
+            
+            //查询操作
+            do {
+                let fetchedObjects = try context.fetch(self.fetchRequest)
+                
+                //遍历查询的结果
+                for info in fetchedObjects{
+                    //删除对象
+                    if(info.date! as Date==date){
+                        context.delete(info)
+                    }
+                }
+                //重新保存-更新到数据库
+                try! context.save()
+            } catch {
+                fatalError("不能更新：\(error)")
+            }
+            NSLog("删除\(indexPath.row)")
+        })
+        //deleteAction.backgroundColor = UIColor.green
+        deleteAction.backgroundEffect = UIBlurEffect(style:UIBlurEffectStyle.dark)
+        return [deleteAction]
+    }
+    
+    func date2String(date:Date)->String{
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = formatter.string(from: date as Date)
+        return dateString
+    }
 }
 
