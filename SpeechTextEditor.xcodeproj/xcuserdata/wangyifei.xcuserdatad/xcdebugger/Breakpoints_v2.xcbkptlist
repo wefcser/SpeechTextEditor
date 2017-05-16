@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeechTextEditor/ListViewController.swift"
-            timestampString = "516513631.285956"
+            timestampString = "516622499.227749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
             landmarkName = "tableView(_:heightForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeechTextEditor/ListViewController.swift"
-            timestampString = "516513631.285956"
+            timestampString = "516622499.227749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
             landmarkName = "tableView(_:editActionsForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -72,11 +72,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeechTextEditor/ListViewController.swift"
-            timestampString = "516513631.285956"
+            timestampString = "516622499.227749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "tableView(_:editActionsForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -88,11 +88,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeechTextEditor/TextViewController.swift"
-            timestampString = "516513631.285956"
+            timestampString = "516599530.649387"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
             landmarkName = "viewWillAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>

@@ -10,7 +10,10 @@ import UIKit
 import CoreData
 
 class TextViewController: UIViewController,UITextViewDelegate{
-    var textIndex:Int?
+    
+    let fetchRequest = NSFetchRequest<Text>(entityName:"Text")
+    var isUpdate:Bool?
+    var isSave:Bool=true
     var textDate:Date?
     var textContent:String?
     
@@ -41,9 +44,23 @@ class TextViewController: UIViewController,UITextViewDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
-        print(self.textIndex!)
         if(self.textDate==nil){
             self.textDate=NSDate() as Date
+        }else{
+            //查询操作
+            do {
+                let fetchedObjects = try context.fetch(self.fetchRequest)
+                
+                //遍历查询的结果
+                for info in fetchedObjects{
+                    if(info.date! as Date==self.textDate){
+                        self.textContent=info.content
+                        break
+                    }
+                }
+            } catch {
+                fatalError("不能查询：\(error)")
+            }
         }
         self.textView.text=textContent
     }
@@ -59,6 +76,7 @@ class TextViewController: UIViewController,UITextViewDelegate{
     
     func textViewDidChange(_ textView: UITextView) {
         print("textViewDidChange")
+        self.isSave=false
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -72,26 +90,56 @@ class TextViewController: UIViewController,UITextViewDelegate{
     
     @IBAction func back(_ sender: UIBarButtonItem) {
         print(self.navigationItem.title!)
-        self.textDate=nil
-        self.textContent=nil
-        self.dismiss(animated: true, completion: nil)
+        if(self.isSave){
+            self.textDate=nil
+            self.textContent=nil
+            self.dismiss(animated: true, completion: nil)
+        }else{
+            //提示尚未保存
+            
+        }
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
-        let text = NSEntityDescription.insertNewObject(forEntityName: "Text", into: context) as! Text
-        text.date=self.textDate! as NSDate
-        text.content=self.textView.text
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateString = formatter.string(from: text.date! as Date)
-        print(dateString)
-        
-        do {
-            try context.save()
-            print("保存成功！")
-        } catch {
-            fatalError("不能保存：\(error)")
+        if(self.isSave){
+            return
         }
+        if(self.isUpdate!){
+            //查询操作
+            do {
+                let fetchedObjects = try context.fetch(self.fetchRequest)
+                
+                //遍历查询的结果
+                for info in fetchedObjects{
+                    //更新对象
+                    if(info.date! as Date==self.textDate){
+                        info.content=self.textView.text
+                        break
+                    }
+                }
+                try! context.save()
+            } catch {
+                fatalError("不能更新：\(error)")
+            }
+            NSLog("更新成功")
+        }else{
+            let text = NSEntityDescription.insertNewObject(forEntityName: "Text", into: context) as! Text
+            text.date=self.textDate! as NSDate
+            text.content=self.textView.text
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let dateString = formatter.string(from: text.date! as Date)
+            print(dateString)
+            
+            do {
+                try context.save()
+                print("保存成功！")
+            } catch {
+                fatalError("不能保存：\(error)")
+            }
+            self.isUpdate=true
+        }
+        self.isSave=true
     }
 }

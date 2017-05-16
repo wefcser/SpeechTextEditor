@@ -15,9 +15,12 @@ let context:NSManagedObjectContext = app.persistentContainer.viewContext
 class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataSource{
 
     let fetchRequest = NSFetchRequest<Text>(entityName:"Text")
+    let descOffset:Int = 5
+    var isUpdate:Bool = false
     var items:[Date:String] = [:]
     var keys:[Date] = []
     var destDate:Date?=nil
+    var isListChange = false
     @IBOutlet weak var textList: UITableView!
     
     override func viewDidLoad() {
@@ -26,27 +29,6 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         // Do any additional setup after loading the view, typically from a nib.
         self.textList.delegate=self
         self.textList.dataSource=self
-        // 本地数据查询遍历
-        // 查询条件设置
-        //fetchRequest.fetchLimit = 10 //限定查询结果的数量
-        //fetchRequest.fetchOffset = 0 //查询的偏移量
-
-        //let predicate = NSPredicate(format: "", "")
-        //fetchRequest.predicate = predicate
-        
-        do {
-            let fetchedObjects = try context.fetch(fetchRequest)
-            
-            //遍历查询的结果
-            for text in fetchedObjects{
-                let index = text.content?.index((text.content?.startIndex)!, offsetBy: 5)
-                self.keys.append(text.date! as Date)
-                self.items[text.date! as Date]=text.content?.substring(to: index!)
-            }
-            self.keys.sort()
-        }catch {
-            fatalError("不能保存：\(error)")
-        }
         
         print("viewDidLoad end")
     }
@@ -60,7 +42,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         if(segue.identifier=="showTextView"){
             let dest=segue.destination as! TextViewController
             dest.navigationItem.title="textView"
-            dest.textIndex=3
+            dest.isUpdate=self.isUpdate
             dest.textDate=self.destDate
             if(self.destDate != nil){
                 dest.textContent=self.items[self.destDate!]
@@ -69,11 +51,44 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         print("prepare")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        print("List view will appear")
+        // 本地数据查询遍历
+        // 查询条件设置
+        //fetchRequest.fetchLimit = 10 //限定查询结果的数量
+        //fetchRequest.fetchOffset = 0 //查询的偏移量
+        
+        //let predicate = NSPredicate(format: "", "")
+        //fetchRequest.predicate = predicate
+
+        do {
+            let fetchedObjects = try context.fetch(fetchRequest)
+            self.keys=[]
+            //遍历查询的结果
+            for text in fetchedObjects{
+                //var offset:Int
+                //                if(text.content?.s<=self.descOffset){
+                //                    offset=text.content?.endIndex.
+                //                }else{
+                //                    offset=self.descOffset
+                //                }
+                let index = text.content?.index((text.content?.startIndex)!, offsetBy: descOffset)
+                self.keys.append(text.date! as Date)
+                self.items[text.date! as Date]=text.content?.substring(to: index!)
+            }
+            self.keys.sort()
+        }catch {
+            fatalError("不能查询：\(error)")
+        }
+        self.textList.reloadData()
+
+    }
+    
     @IBAction func goTextView(_ sender: UIButton) {
-        print("go")
+        self.isUpdate=false
         self.destDate=nil
         self.performSegue(withIdentifier: "showTextView", sender: self)
-        print("goback")
+        print("back")
     }
     //返回几组
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -89,7 +104,6 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     //每一行内容
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("cell begin")
         let cellIdentifier: String = "cellModel1"
         var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
         if(cell==nil){
@@ -102,11 +116,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         //date to string
         cell!.textLabel?.text = date2String(date: keys[indexPath.row])
         cell!.detailTextLabel?.text = items[keys[indexPath.row]]
-        //cell!.contentView.
-        //cell!.imageView?.image = UIImage(named:"cellImage.png")
-        //cell!.detailTextLabel?.text = "详细信息介绍"
         
-        print("cell end")
         return cell!
     }
     //点击一行
@@ -117,12 +127,9 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
         print(cell!.textLabel?.text!)
         
-        print("go")
+        self.isUpdate=true
         self.destDate=self.keys[indexPath.row]
         self.performSegue(withIdentifier: "showTextView", sender: self)
-        print("goback")
-
-        
     }
     /*
     //删除一行
@@ -162,6 +169,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                     //删除对象
                     if(info.date! as Date==date){
                         context.delete(info)
+                        break
                     }
                 }
                 //重新保存-更新到数据库
