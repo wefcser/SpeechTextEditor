@@ -12,6 +12,10 @@ import CoreData
 let app:AppDelegate = UIApplication.shared.delegate as! AppDelegate
 let context:NSManagedObjectContext = app.persistentContainer.viewContext
 
+extension String {
+    var length: Int { return self.characters.count }
+}
+
 class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataSource{
 
     let fetchRequest = NSFetchRequest<Text>(entityName:"Text")
@@ -66,13 +70,11 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             self.keys=[]
             //遍历查询的结果
             for text in fetchedObjects{
-                //var offset:Int
-                //                if(text.content?.s<=self.descOffset){
-                //                    offset=text.content?.endIndex.
-                //                }else{
-                //                    offset=self.descOffset
-                //                }
-                let index = text.content?.index((text.content?.startIndex)!, offsetBy: descOffset)
+                var offset=descOffset
+                if((text.content?.length)!<=self.descOffset){
+                    offset=(text.content?.length)!
+                }
+                let index = text.content?.index((text.content?.startIndex)!, offsetBy: offset)
                 self.keys.append(text.date! as Date)
                 self.items[text.date! as Date]=text.content?.substring(to: index!)
             }
