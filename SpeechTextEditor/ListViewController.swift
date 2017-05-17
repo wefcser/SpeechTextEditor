@@ -73,11 +73,15 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 var offset=descOffset
                 if((text.content?.length)!<=self.descOffset){
                     offset=(text.content?.length)!
+                    let index = text.content?.index((text.content?.startIndex)!, offsetBy: offset)
+                    self.keys.append(text.date! as Date)
+                    self.items[text.date! as Date]=text.content?.substring(to: index!)
+                }else{
+                    let index = text.content?.index((text.content?.startIndex)!, offsetBy: offset)
+                    self.keys.append(text.date! as Date)
+                    self.items[text.date! as Date]=(text.content?.substring(to: index!))!+"..."
                 }
-                let index = text.content?.index((text.content?.startIndex)!, offsetBy: offset)
-                self.keys.append(text.date! as Date)
-                self.items[text.date! as Date]=text.content?.substring(to: index!)
-            }
+                            }
             self.keys.sort()
         }catch {
             fatalError("不能查询：\(error)")
