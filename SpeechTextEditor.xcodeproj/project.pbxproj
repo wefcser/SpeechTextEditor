@@ -15,6 +15,7 @@
 		D9066C2E1EB89C2E006B0F78 /* SpeechTextEditorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C2D1EB89C2E006B0F78 /* SpeechTextEditorTests.swift */; };
 		D9066C391EB89C2E006B0F78 /* SpeechTextEditorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C381EB89C2E006B0F78 /* SpeechTextEditorUITests.swift */; };
 		D9066C471EB8A9F7006B0F78 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9066C461EB8A9F7006B0F78 /* TextViewController.swift */; };
+		D90A19F61ED919A700A8D14B /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90A19F51ED919A700A8D14B /* CustomCell.swift */; };
 		D98455251EC1AC1B0095D2EE /* TextModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D98455231EC1AC1B0095D2EE /* TextModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,7 @@
 		D9066C381EB89C2E006B0F78 /* SpeechTextEditorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechTextEditorUITests.swift; sourceTree = "<group>"; };
 		D9066C3A1EB89C2E006B0F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9066C461EB8A9F7006B0F78 /* TextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
+		D90A19F51ED919A700A8D14B /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 		D98455241EC1AC1B0095D2EE /* TextModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TextModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,6 +111,7 @@
 				D9066C241EB89C2D006B0F78 /* Info.plist */,
 				D9066C461EB8A9F7006B0F78 /* TextViewController.swift */,
 				D98455231EC1AC1B0095D2EE /* TextModel.xcdatamodeld */,
+				D90A19F51ED919A700A8D14B /* CustomCell.swift */,
 			);
 			path = SpeechTextEditor;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 			files = (
 				D98455251EC1AC1B0095D2EE /* TextModel.xcdatamodeld in Sources */,
 				D9066C1B1EB89C2D006B0F78 /* ListViewController.swift in Sources */,
+				D90A19F61ED919A700A8D14B /* CustomCell.swift in Sources */,
 				D9066C191EB89C2D006B0F78 /* AppDelegate.swift in Sources */,
 				D9066C471EB8A9F7006B0F78 /* TextViewController.swift in Sources */,
 			);
