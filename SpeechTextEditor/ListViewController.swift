@@ -19,12 +19,18 @@ extension String {
 class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataSource{
 
     let fetchRequest = NSFetchRequest<Text>(entityName:"Text")
-    let descOffset:Int = 5
+    let descOffset:Int = 50
+    let descLines:Int = 0
+    let delta:CGFloat = 29
     var isUpdate:Bool = false
     var items:[Date:String] = [:]
     var keys:[Date] = []
     var destDate:Date?=nil
     var isListChange = false
+    var screenWidth:CGFloat = 0
+    var screenHeight:CGFloat = 0
+    var labelWidth:CGFloat = 0
+    var cellHeight:CGFloat = 50
     @IBOutlet weak var textList: UITableView!
     
     override func viewDidLoad() {
@@ -33,6 +39,16 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         // Do any additional setup after loading the view, typically from a nib.
         self.textList.delegate=self
         self.textList.dataSource=self
+        // 隐藏TableView分割线
+        let footerView:UIView = UIView()
+        footerView.backgroundColor = UIColor.clear
+        self.textList.tableFooterView = footerView
+        //获得设备高度，宽度
+        let r:CGRect = UIScreen.main.bounds
+        self.screenWidth = r.maxX
+        self.screenHeight = r.maxY
+        self.labelWidth = r.maxX-16
+        print(self.labelWidth)
         
         print("viewDidLoad end")
     }
@@ -81,7 +97,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                     self.keys.append(text.date! as Date)
                     self.items[text.date! as Date]=(text.content?.substring(to: index!))!+"..."
                 }
-                            }
+            }
             self.keys.sort()
         }catch {
             fatalError("不能查询：\(error)")
@@ -106,32 +122,38 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     //每一行高度
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return self.cellHeight
     }
     //每一行内容
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellIdentifier: String = "cellModel1"
-        var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
-        if(cell==nil){
-            print("cell nil")
-            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: cellIdentifier)
-            cell!.textLabel?.font = UIFont.systemFont(ofSize: 14)
-            cell!.selectionStyle = .gray
-            cell!.accessoryType = UITableViewCellAccessoryType.none
-        }
+        let cellIdentifier: String = "ListCell"
+        let cell: ListCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! ListCell
+//        if(cell==nil){
+//            print("cell nil")
+//            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: cellIdentifier)
+//            cell.textLabel?.font = UIFont.systemFont(ofSize: 14)
+//            cell.selectionStyle = .gray
+//            cell.accessoryType = UITableViewCellAccessoryType.none
+//        }
         //date to string
-        cell!.textLabel?.text = date2String(date: keys[indexPath.row])
-        cell!.detailTextLabel?.text = items[keys[indexPath.row]]
+        cell.date.text = date2String(date: keys[indexPath.row])
+        cell.content.text = items[keys[indexPath.row]]
+        //cell content 显示多行
+        cell.content.numberOfLines = self.descLines
+        cell.content.lineBreakMode = NSLineBreakMode.byCharWrapping
+        //cell height 高度计算
+        self.cellHeight = self.getLabelHeigh(labelStr: cell.content.text!, font: UIFont.systemFont(ofSize: 17.0), width: self.labelWidth) + self.delta
         
-        return cell!
+        print(self.cellHeight)
+        return cell
     }
     //点击一行
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //释放选中效果
         tableView.deselectRow(at: indexPath, animated: true)
-        let cell:UITableViewCell! = tableView.cellForRow(at: indexPath)
+        //let cell:UITableViewCell! = tableView.cellForRow(at: indexPath)
         
-        print(cell!.textLabel?.text!)
+        //print(cell!.textLabel?.text!)
         
         self.isUpdate=true
         self.destDate=self.keys[indexPath.row]
@@ -196,5 +218,29 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         let dateString = formatter.string(from: date as Date)
         return dateString
     }
+    
+    func getLabelHeigh(labelStr:String,font:UIFont,width:CGFloat) -> CGFloat {
+        let statusLabelText: NSString = labelStr as NSString
+        let size = CGSize.init(width: width, height: 900)
+        let dic = NSDictionary(object: font, forKey: NSFontAttributeName as NSCopying)
+        
+        let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [String : AnyObject], context: nil).size
+        
+        return strSize.height
+        
+    }
+    
+    func getLabelWidth(labelStr:String,font:UIFont,height:CGFloat) -> CGFloat {
+        let statusLabelText: NSString = labelStr as NSString
+        let size = CGSize.init(width: 900, height: height)
+        let dic = NSDictionary(object: font, forKey: NSFontAttributeName as NSCopying)
+        
+        let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [String : AnyObject], context: nil).size
+        
+        return strSize.width
+        
+    }
+    
+
 }
 
