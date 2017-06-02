@@ -21,8 +21,10 @@ class TextViewController: UIViewController,UITextViewDelegate{
     
     let unSaveAlertController = UIAlertController(title: "修改尚未保存，是否保存？",
                                             message: nil, preferredStyle: .alert)
-    let saveAlertController = UIAlertController(title: "保存成功",
+    let saveSuccessAlertController = UIAlertController(title: "保存成功！",
                                                 message: nil, preferredStyle: .alert)
+    let saveFailureAlertController = UIAlertController(title: "保存失败！",
+                                                      message: nil, preferredStyle: .alert)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +67,15 @@ class TextViewController: UIViewController,UITextViewDelegate{
                 }
                 try! context.save()
             } catch {
+                //显示保存失败提示框
+                self.present(self.saveFailureAlertController, animated: true, completion: nil)
+                //一秒钟后自动消失
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                    self.presentedViewController?.dismiss(animated: false, completion: nil)
+                    self.textDate=nil
+                    self.textContent=nil
+                    self.dismiss(animated: true, completion: nil)
+                }
                 fatalError("不能更新：\(error)")
             }
             NSLog("更新成功")
@@ -134,17 +145,17 @@ class TextViewController: UIViewController,UITextViewDelegate{
             self.textContent=nil
             self.dismiss(animated: true, completion: nil)
         }else{
-            //显示提示框
+            //显示未保存提示框
             self.present(self.unSaveAlertController, animated: true, completion: nil)
         }
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
         if(self.isSave){
-            //显示提示框
-            self.present(self.saveAlertController, animated: true, completion: nil)
-            //两秒钟后自动消失
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            //显示保存成功提示框
+            self.present(self.saveSuccessAlertController, animated: true, completion: nil)
+            //一秒钟后自动消失
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
                 self.presentedViewController?.dismiss(animated: false, completion: nil)
             }
             return
@@ -164,6 +175,12 @@ class TextViewController: UIViewController,UITextViewDelegate{
                 }
                 try! context.save()
             } catch {
+                //显示保存失败提示框
+                self.present(self.saveFailureAlertController, animated: true, completion: nil)
+                //一秒钟后自动消失
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                    self.presentedViewController?.dismiss(animated: false, completion: nil)
+                }
                 fatalError("不能更新：\(error)")
             }
             NSLog("更新成功")
@@ -181,16 +198,22 @@ class TextViewController: UIViewController,UITextViewDelegate{
                 try context.save()
                 print("保存成功！")
             } catch {
+                //显示保存失败提示框
+                self.present(self.saveFailureAlertController, animated: true, completion: nil)
+                //一秒钟后自动消失
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                    self.presentedViewController?.dismiss(animated: false, completion: nil)
+                }
                 fatalError("不能保存：\(error)")
             }
             self.isUpdate=true
         }
         
         self.isSave=true
-        //显示提示框
-        self.present(self.saveAlertController, animated: true, completion: nil)
+        //显示保存成功提示框
+        self.present(self.saveSuccessAlertController, animated: true, completion: nil)
         //两秒钟后自动消失
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
             self.presentedViewController?.dismiss(animated: false, completion: nil)
         }
         return
