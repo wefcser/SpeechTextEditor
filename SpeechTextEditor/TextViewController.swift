@@ -19,6 +19,9 @@ class TextViewController: UIViewController,UITextViewDelegate{
     
     @IBOutlet weak var textView: UITextView!
     
+    let alertController = UIAlertController(title: "提示",
+                                            message: "修改尚未保存，是否保存？", preferredStyle: .alert)
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -35,6 +38,40 @@ class TextViewController: UIViewController,UITextViewDelegate{
         
         //self.app = UIApplication.shared.delegate as! AppDelegate
         //self.context = app.persistentContainer.viewContext
+        //定义事件
+        let cancelAction = UIAlertAction(title: "否", style: .cancel, handler: {
+            action in
+            self.textDate=nil
+            self.textContent=nil
+            self.dismiss(animated: true, completion: nil)
+            
+        })
+        let okAction = UIAlertAction(title: "是", style: .default, handler: {
+            action in
+            //保存
+            //查询操作
+            do {
+                let fetchedObjects = try context.fetch(self.fetchRequest)
+                
+                //遍历查询的结果
+                for info in fetchedObjects{
+                    //更新对象
+                    if(info.date! as Date==self.textDate){
+                        info.content=self.textView.text
+                        break
+                    }
+                }
+                try! context.save()
+            } catch {
+                fatalError("不能更新：\(error)")
+            }
+            NSLog("更新成功")
+            self.textDate=nil
+            self.textContent=nil
+            self.dismiss(animated: true, completion: nil)
+        })
+        self.alertController.addAction(cancelAction)
+        self.alertController.addAction(okAction)
     }
     
     override func didReceiveMemoryWarning() {
@@ -95,8 +132,7 @@ class TextViewController: UIViewController,UITextViewDelegate{
             self.textContent=nil
             self.dismiss(animated: true, completion: nil)
         }else{
-            //提示尚未保存
-            
+            self.present(alertController, animated: true, completion: nil)
         }
     }
     

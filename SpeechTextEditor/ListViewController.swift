@@ -224,7 +224,6 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [String : AnyObject], context: nil).size
         
         return strSize.height
-        
     }
     
     func getLabelWidth(labelStr:String,font:UIFont,height:CGFloat) -> CGFloat {
@@ -235,7 +234,6 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [String : AnyObject], context: nil).size
         
         return strSize.width
-        
     }
     
 
