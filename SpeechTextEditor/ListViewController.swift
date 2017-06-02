@@ -30,7 +30,6 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     var screenHeight:CGFloat = 0
     var labelWidth:CGFloat = 0
     let labelMaxHeight:CGFloat = 60.861328125
-    var cellHeight:CGFloat = 50
     @IBOutlet weak var textList: UITableView!
     
     override func viewDidLoad() {
@@ -88,8 +87,9 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             for text in fetchedObjects{
                 let offset=(text.content?.length)!
                 let index = text.content?.index((text.content?.startIndex)!, offsetBy: offset)
+                let content:String = (text.content?.substring(to: index!))!
                 self.keys.append(text.date! as Date)
-                self.items[text.date! as Date]=text.content?.substring(to: index!)
+                self.items[text.date! as Date] = content
             }
             self.keys.sort()
         }catch {
@@ -115,19 +115,25 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     //每一行高度
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.cellHeight
+        if(indexPath.row>=self.keys.count){
+            return self.labelMaxHeight+self.delta
+        }else{
+            //cell height 高度计算
+            let content:String = items[keys[indexPath.row]]!
+            var contentHeight:CGFloat = self.getLabelHeigh(labelStr: content, font: UIFont.systemFont(ofSize: 17.0), width: self.labelWidth)
+            if(contentHeight>self.labelMaxHeight){
+                contentHeight=self.labelMaxHeight
+            }
+            print(contentHeight)
+            let cellHeight = contentHeight + self.delta
+
+            return cellHeight
+        }
     }
     //每一行内容
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier: String = "ListCell"
         let cell: ListCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! ListCell
-        //cell height 高度计算
-        var contentHeight:CGFloat = self.getLabelHeigh(labelStr: items[keys[indexPath.row]]!, font: UIFont.systemFont(ofSize: 17.0), width: self.labelWidth)
-        if(contentHeight>self.labelMaxHeight){
-            contentHeight=self.labelMaxHeight
-        }
-        print(contentHeight)
-        self.cellHeight = contentHeight + self.delta
         //cell content 显示多行
         cell.content.numberOfLines = self.descLines
         cell.content.lineBreakMode = NSLineBreakMode.byTruncatingTail
