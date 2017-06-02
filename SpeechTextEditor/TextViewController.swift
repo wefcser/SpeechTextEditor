@@ -19,8 +19,10 @@ class TextViewController: UIViewController,UITextViewDelegate{
     
     @IBOutlet weak var textView: UITextView!
     
-    let alertController = UIAlertController(title: "提示",
-                                            message: "修改尚未保存，是否保存？", preferredStyle: .alert)
+    let unSaveAlertController = UIAlertController(title: "修改尚未保存，是否保存？",
+                                            message: nil, preferredStyle: .alert)
+    let saveAlertController = UIAlertController(title: "保存成功",
+                                                message: nil, preferredStyle: .alert)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +40,7 @@ class TextViewController: UIViewController,UITextViewDelegate{
         
         //self.app = UIApplication.shared.delegate as! AppDelegate
         //self.context = app.persistentContainer.viewContext
-        //定义事件
+        //提示框定义事件
         let cancelAction = UIAlertAction(title: "否", style: .cancel, handler: {
             action in
             self.textDate=nil
@@ -70,8 +72,8 @@ class TextViewController: UIViewController,UITextViewDelegate{
             self.textContent=nil
             self.dismiss(animated: true, completion: nil)
         })
-        self.alertController.addAction(cancelAction)
-        self.alertController.addAction(okAction)
+        self.unSaveAlertController.addAction(cancelAction)
+        self.unSaveAlertController.addAction(okAction)
     }
     
     override func didReceiveMemoryWarning() {
@@ -132,12 +134,19 @@ class TextViewController: UIViewController,UITextViewDelegate{
             self.textContent=nil
             self.dismiss(animated: true, completion: nil)
         }else{
-            self.present(alertController, animated: true, completion: nil)
+            //显示提示框
+            self.present(self.unSaveAlertController, animated: true, completion: nil)
         }
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
         if(self.isSave){
+            //显示提示框
+            self.present(self.saveAlertController, animated: true, completion: nil)
+            //两秒钟后自动消失
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                self.presentedViewController?.dismiss(animated: false, completion: nil)
+            }
             return
         }
         if(self.isUpdate!){
@@ -176,6 +185,14 @@ class TextViewController: UIViewController,UITextViewDelegate{
             }
             self.isUpdate=true
         }
+        
         self.isSave=true
+        //显示提示框
+        self.present(self.saveAlertController, animated: true, completion: nil)
+        //两秒钟后自动消失
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            self.presentedViewController?.dismiss(animated: false, completion: nil)
+        }
+        return
     }
 }
