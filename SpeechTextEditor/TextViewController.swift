@@ -16,16 +16,24 @@ class TextViewController: UIViewController,UITextViewDelegate{
     var isSave:Bool=true
     var textDate:Date?
     var textContent:String?
+    var isSpeak:Bool=false
     
     @IBOutlet weak var textView: UITextView!
     
+    @IBOutlet weak var speak: UIButton!
+    
     let unSaveAlertController = UIAlertController(title: "修改尚未保存，是否保存？",
-                                            message: nil, preferredStyle: .alert)
+                                                  message: nil,
+                                                  preferredStyle: .alert)
     let saveSuccessAlertController = UIAlertController(title: "保存成功！",
-                                                message: nil, preferredStyle: .alert)
+                                                       message: nil,
+                                                       preferredStyle: .alert)
     let saveFailureAlertController = UIAlertController(title: "保存失败！",
-                                                      message: nil, preferredStyle: .alert)
-
+                                                       message: nil,
+                                                       preferredStyle: .alert)
+//    let speakAlertController = UIAlertController(title: "正在录音...",
+//                                                 message: nil,
+//                                                 preferredStyle: .alert)
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -40,6 +48,7 @@ class TextViewController: UIViewController,UITextViewDelegate{
         self.textView.isUserInteractionEnabled = true
         self.textView.isScrollEnabled = true
         
+        self.speak.setTitle("开始听写", for: .normal)
         //self.app = UIApplication.shared.delegate as! AppDelegate
         //self.context = app.persistentContainer.viewContext
         //提示框定义事件
@@ -217,5 +226,19 @@ class TextViewController: UIViewController,UITextViewDelegate{
             self.presentedViewController?.dismiss(animated: false, completion: nil)
         }
         return
+    }
+    
+    @IBAction func touchToSpeak(_ sender: UIButton) {
+        if(self.isSpeak){
+            self.isSpeak=false
+            self.speak.setTitle("开始听写", for: .normal)
+            //
+            
+        }else{
+            self.isSpeak=true
+            self.speak.setTitle("结束听写", for: .normal)
+            //
+            
+        }
     }
 }
