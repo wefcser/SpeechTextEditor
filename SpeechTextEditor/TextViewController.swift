@@ -62,35 +62,83 @@ class TextViewController: UIViewController,UITextViewDelegate,IFlySpeechRecogniz
         let okAction = UIAlertAction(title: "是", style: .default, handler: {
             action in
             //保存
-            //查询操作
-            do {
-                let fetchedObjects = try context.fetch(self.fetchRequest)
-                
-                //遍历查询的结果
-                for info in fetchedObjects{
-                    //更新对象
-                    if(info.date! as Date==self.textDate){
-                        info.content=self.textView.text
-                        break
+            if(self.isUpdate!){
+                //查询操作
+                do {
+                    let fetchedObjects = try context.fetch(self.fetchRequest)
+                    
+                    //遍历查询的结果
+                    for info in fetchedObjects{
+                        //更新对象
+                        if(info.date! as Date==self.textDate){
+                            info.content=self.textView.text
+                            break
+                        }
                     }
+                    try! context.save()
+                    NSLog("更新成功")
+                    self.isSave=true
+                    //显示保存成功提示框
+                    self.present(self.saveSuccessAlertController, animated: true, completion: nil)
+                    //一秒钟后自动消失
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                        self.presentedViewController?.dismiss(animated: false, completion: nil)
+                    }
+                    //1.5秒钟后自动消失
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                        self.textDate=nil
+                        self.textContent=nil
+                        self.dismiss(animated: true, completion: nil)
+                    }
+
+                } catch {
+                    //显示保存失败提示框
+                    self.present(self.saveFailureAlertController, animated: true, completion: nil)
+                    //一秒钟后自动消失
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                        self.presentedViewController?.dismiss(animated: false, completion: nil)
+                    }
+                    fatalError("不能更新：\(error)")
                 }
-                try! context.save()
-            } catch {
-                //显示保存失败提示框
-                self.present(self.saveFailureAlertController, animated: true, completion: nil)
-                //一秒钟后自动消失
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                    self.presentedViewController?.dismiss(animated: false, completion: nil)
-                    self.textDate=nil
-                    self.textContent=nil
-                    self.dismiss(animated: true, completion: nil)
+                
+            }else{
+                let text = NSEntityDescription.insertNewObject(forEntityName: "Text", into: context) as! Text
+                text.date=self.textDate! as NSDate
+                text.content=self.textView.text
+                
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let dateString = formatter.string(from: text.date! as Date)
+                print(dateString)
+                
+                do {
+                    try context.save()
+                    print("保存成功！")
+                    self.isUpdate=true
+                    self.isSave=true
+                    //显示保存成功提示框
+                    self.present(self.saveSuccessAlertController, animated: true, completion: nil)
+                    //一秒钟后自动消失
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                        self.presentedViewController?.dismiss(animated: false, completion: nil)
+                    }
+                    //1.5秒钟后自动消失
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                        self.textDate=nil
+                        self.textContent=nil
+                        self.dismiss(animated: true, completion: nil)
+                    }
+
+                } catch {
+                    //显示保存失败提示框
+                    self.present(self.saveFailureAlertController, animated: true, completion: nil)
+                    //一秒钟后自动消失
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                        self.presentedViewController?.dismiss(animated: false, completion: nil)
+                    }
+                    fatalError("不能保存：\(error)")
                 }
-                fatalError("不能更新：\(error)")
             }
-            NSLog("更新成功")
-            self.textDate=nil
-            self.textContent=nil
-            self.dismiss(animated: true, completion: nil)
         })
         self.unSaveAlertController.addAction(cancelAction)
         self.unSaveAlertController.addAction(okAction)
@@ -193,6 +241,14 @@ class TextViewController: UIViewController,UITextViewDelegate,IFlySpeechRecogniz
                     }
                 }
                 try! context.save()
+                NSLog("更新成功")
+                self.isSave = true
+                //显示保存成功提示框
+                self.present(self.saveSuccessAlertController, animated: true, completion: nil)
+                //一秒钟后自动消失
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                    self.presentedViewController?.dismiss(animated: false, completion: nil)
+                }
             } catch {
                 //显示保存失败提示框
                 self.present(self.saveFailureAlertController, animated: true, completion: nil)
@@ -202,7 +258,6 @@ class TextViewController: UIViewController,UITextViewDelegate,IFlySpeechRecogniz
                 }
                 fatalError("不能更新：\(error)")
             }
-            NSLog("更新成功")
         }else{
             let text = NSEntityDescription.insertNewObject(forEntityName: "Text", into: context) as! Text
             text.date=self.textDate! as NSDate
@@ -215,7 +270,16 @@ class TextViewController: UIViewController,UITextViewDelegate,IFlySpeechRecogniz
             
             do {
                 try context.save()
-                print("保存成功！")
+                NSLog("更新成功")
+                self.isUpdate=true
+                self.isSave = true
+                //显示保存成功提示框
+                self.present(self.saveSuccessAlertController, animated: true, completion: nil)
+                //一秒钟后自动消失
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                    self.presentedViewController?.dismiss(animated: false, completion: nil)
+                }
+
             } catch {
                 //显示保存失败提示框
                 self.present(self.saveFailureAlertController, animated: true, completion: nil)
@@ -225,16 +289,8 @@ class TextViewController: UIViewController,UITextViewDelegate,IFlySpeechRecogniz
                 }
                 fatalError("不能保存：\(error)")
             }
-            self.isUpdate=true
         }
         
-        self.isSave=true
-        //显示保存成功提示框
-        self.present(self.saveSuccessAlertController, animated: true, completion: nil)
-        //两秒钟后自动消失
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            self.presentedViewController?.dismiss(animated: false, completion: nil)
-        }
         return
     }
     //IFlySpeechRecognizerDelegate
@@ -275,19 +331,24 @@ class TextViewController: UIViewController,UITextViewDelegate,IFlySpeechRecogniz
     }
     //IFlySpeechRecognizerDelegate 协议实现
     //识别结果返回代理
-    func onResults(_ results:[Any]!,isLast:Bool) -> Void{
-        let resultString:NSMutableString = Ifly.resultString(results[0] as! [AnyHashable:Any])
+    func onResults(_ results:[Any]?,isLast:Bool) -> Void{
+        if(results == nil){
+            return
+        }
+        
+        let resultString:NSMutableString = Ifly.resultString(results![0] as! [AnyHashable:Any])
         
         let result:String = NSString.localizedStringWithFormat("%@%@", self.textView.text, (resultString as String)) as String
         let resultFromJson:String =  ISRDataHelper.string(fromJson: resultString as String!)
         self.textView.text = self.textView.text+resultFromJson
+        self.isSave = false
         
         if (isLast){
             NSLog("听写结果(json)：%@测试", result)
         }
-        NSLog(result as String)
-        NSLog("resultFromJson=%@",resultFromJson)
-        NSLog(isLast.description)
+        //NSLog(result as String)
+        //NSLog("resultFromJson=%@",resultFromJson)
+        //NSLog(isLast.description)
     }
     //识别会话结束返回代理
     func onError(_ error:IFlySpeechError){
