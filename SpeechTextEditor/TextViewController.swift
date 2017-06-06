@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TextViewController: UIViewController,UITextViewDelegate{
+class TextViewController: UIViewController,UITextViewDelegate,IFlySpeechRecognizerDelegate{
     
     let fetchRequest = NSFetchRequest<Text>(entityName:"Text")
     var isUpdate:Bool?
@@ -103,6 +103,8 @@ class TextViewController: UIViewController,UITextViewDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
+        super.viewWillAppear(animated)
+        
         if(self.textDate==nil){
             self.textDate=NSDate() as Date
         }else{
@@ -122,6 +124,14 @@ class TextViewController: UIViewController,UITextViewDelegate{
             }
         }
         self.textView.text=textContent
+        //初始化识别对象
+        self.initRecognizer()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        
+        super.viewWillDisappear(animated)
     }
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
@@ -227,18 +237,132 @@ class TextViewController: UIViewController,UITextViewDelegate{
         }
         return
     }
+    //IFlySpeechRecognizerDelegate
+    var iFlySpeechRecognizer:IFlySpeechRecognizer? = nil
     
     @IBAction func touchToSpeak(_ sender: UIButton) {
         if(self.isSpeak){
             self.isSpeak=false
             self.speak.setTitle("开始听写", for: .normal)
             //
+            self.iFlySpeechRecognizer?.stopListening()
             
         }else{
-            self.isSpeak=true
-            self.speak.setTitle("结束听写", for: .normal)
             //
+            self.iFlySpeechRecognizer?.cancel()
+            
+            //设置音频来源为麦克风
+            self.iFlySpeechRecognizer?.setParameter(IFLY_AUDIO_SOURCE_MIC, forKey:"audio_source")
+            
+            //设置听写结果格式为json
+            self.iFlySpeechRecognizer?.setParameter("json", forKey:IFlySpeechConstant.result_TYPE())
+            
+            //保存录音文件，保存在sdk工作路径中，如未设置工作路径，则默认保存在library/cache下
+            self.iFlySpeechRecognizer?.setParameter("asr.pcm", forKey:IFlySpeechConstant.asr_AUDIO_PATH())
+            
+            self.iFlySpeechRecognizer?.delegate=self
+            
+            let ret:Bool = self.iFlySpeechRecognizer!.startListening()
+            
+            if (ret) {
+                self.isSpeak=true
+                self.speak.setTitle("结束听写", for: .normal)
+            }else{
+                NSLog("启动识别服务失败，请稍后重试")//可能是上次请求未结束，暂不支持多路并发
+            }
             
         }
     }
+    //IFlySpeechRecognizerDelegate 协议实现
+    //识别结果返回代理
+    func onResults(_ results:[Any]!,isLast:Bool) -> Void{
+        let resultString:NSMutableString = Ifly.resultString(results[0] as! [AnyHashable:Any])
+        
+        let result:String = NSString.localizedStringWithFormat("%@%@", self.textView.text, (resultString as String)) as String
+        let resultFromJson:String =  ISRDataHelper.string(fromJson: resultString as String!)
+        self.textView.text = self.textView.text+resultFromJson
+        
+        if (isLast){
+            NSLog("听写结果(json)：%@测试", result)
+        }
+        NSLog(result as String)
+        NSLog("resultFromJson=%@",resultFromJson)
+        NSLog(isLast.description)
+    }
+    //识别会话结束返回代理
+    func onError(_ error:IFlySpeechError){
+        NSLog(error.errorDesc)
+    }
+    //停止录音回调
+    func onEndOfSpeech(){
+        NSLog("停止录音")
+    }
+    //开始录音回调
+    func onBeginOfSpeech(){
+        NSLog("开始录音")
+    }
+    //音量回调函数
+    func onVolumeChanged(volume:Int){
+    }
+    //会话取消回调
+    func onCancel(){
+        NSLog("识别取消")
+    }
+    //设置识别参数
+    func initRecognizer(){
+
+        if (self.iFlySpeechRecognizer == nil) {
+            self.iFlySpeechRecognizer = IFlySpeechRecognizer.sharedInstance()
+            
+            self.iFlySpeechRecognizer?.setParameter("", forKey:IFlySpeechConstant.params())
+            
+            //设置听写模式
+            self.iFlySpeechRecognizer?.setParameter("iat", forKey:IFlySpeechConstant.ifly_DOMAIN())
+        }
+        self.iFlySpeechRecognizer?.delegate = self;
+        
+        if (self.iFlySpeechRecognizer != nil) {
+            let instance = IATConfig.sharedInstance()
+            
+            //设置最长录音时间
+            self.iFlySpeechRecognizer?.setParameter(instance?.speechTimeout, forKey:IFlySpeechConstant.speech_TIMEOUT())
+            //设置后端点
+            self.iFlySpeechRecognizer?.setParameter(instance!.vadEos, forKey:IFlySpeechConstant.vad_EOS())
+            //设置前端点
+            self.iFlySpeechRecognizer?.setParameter(instance!.vadBos, forKey:IFlySpeechConstant.vad_BOS())
+            //网络等待时间
+            self.iFlySpeechRecognizer?.setParameter("20000", forKey:IFlySpeechConstant.net_TIMEOUT())
+            
+            //设置采样率，推荐使用16K
+            self.iFlySpeechRecognizer?.setParameter(instance!.sampleRate, forKey:IFlySpeechConstant.sample_RATE())
+            
+            let chinese:String = IATConfig.chinese()
+            let english:String = IATConfig.english()
+            let language:String = instance!.language
+            if (language == chinese) {
+                //设置语言
+                self.iFlySpeechRecognizer?.setParameter(instance!.language, forKey:IFlySpeechConstant.language());
+                //设置方言
+                self.iFlySpeechRecognizer?.setParameter(instance!.accent, forKey:IFlySpeechConstant.accent())
+            }else if (language == english) {
+                self.iFlySpeechRecognizer?.setParameter(instance!.language, forKey:IFlySpeechConstant.language())
+            }
+            //设置是否返回标点符号
+            self.iFlySpeechRecognizer?.setParameter(instance!.dot, forKey:IFlySpeechConstant.asr_PTT())
+            
+        }
+        
+//        //初始化录音器
+//        if (pcmRecorder == nil)
+//        {
+//            pcmRecorder = [IFlyPcmRecorder sharedInstance];
+//        }
+//        
+//        _pcmRecorder.delegate = self;
+//        
+//        [_pcmRecorder setSample:[IATConfig sharedInstance].sampleRate];
+//        
+//        [_pcmRecorder setSaveAudioPath:nil];    //不保存录音文件
+    }
+    
 }

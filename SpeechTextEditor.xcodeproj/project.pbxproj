@@ -24,6 +24,8 @@
 		D93CCF851EE59EAB00C2E48C /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93CCF831EE59E1E00C2E48C /* CoreTelephony.framework */; };
 		D93CCF861EE59F0600C2E48C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93CCF791EE59D2000C2E48C /* SystemConfiguration.framework */; };
 		D98455251EC1AC1B0095D2EE /* TextModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D98455231EC1AC1B0095D2EE /* TextModel.xcdatamodeld */; };
+		D9C051301EE6667D0026F4BE /* IflyConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C0512F1EE6667D0026F4BE /* IflyConfig.m */; };
+		D9C051331EE668C60026F4BE /* IflyDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C051321EE668C60026F4BE /* IflyDataHelper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +71,10 @@
 		D93CCF791EE59D2000C2E48C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D93CCF831EE59E1E00C2E48C /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D98455241EC1AC1B0095D2EE /* TextModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TextModel.xcdatamodel; sourceTree = "<group>"; };
+		D9C0512E1EE665CF0026F4BE /* IflyConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IflyConfig.h; sourceTree = "<group>"; };
+		D9C0512F1EE6667D0026F4BE /* IflyConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IflyConfig.m; sourceTree = "<group>"; };
+		D9C051311EE668A40026F4BE /* IflyDataHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IflyDataHelper.h; sourceTree = "<group>"; };
+		D9C051321EE668C60026F4BE /* IflyDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IflyDataHelper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +144,10 @@
 				D93CCF681EE554A900C2E48C /* Ifly.m */,
 				D93CCF6A1EE555A900C2E48C /* Ifly.h */,
 				D93CCF6E1EE5778C00C2E48C /* Definition.h */,
+				D9C0512E1EE665CF0026F4BE /* IflyConfig.h */,
+				D9C0512F1EE6667D0026F4BE /* IflyConfig.m */,
+				D9C051311EE668A40026F4BE /* IflyDataHelper.h */,
+				D9C051321EE668C60026F4BE /* IflyDataHelper.m */,
 			);
 			path = SpeechTextEditor;
 			sourceTree = "<group>";
@@ -314,6 +324,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D98455251EC1AC1B0095D2EE /* TextModel.xcdatamodeld in Sources */,
+				D9C051331EE668C60026F4BE /* IflyDataHelper.m in Sources */,
+				D9C051301EE6667D0026F4BE /* IflyConfig.m in Sources */,
 				D9066C1B1EB89C2D006B0F78 /* ListViewController.swift in Sources */,
 				D90A19F61ED919A700A8D14B /* CustomCell.swift in Sources */,
 				D9066C191EB89C2D006B0F78 /* AppDelegate.swift in Sources */,
