@@ -14,9 +14,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        //创建语音配置,appid必须要传入，仅执行一次则可
+        let initString:String = Ifly.initString(nil)
+        
+        //所有服务启动前，需要确保执行createUtility
+        IFlySpeechUtility.createUtility(initString)
+        
+        return true
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        IFlySpeechUtility.getUtility().handleOpen(url)
         return true
     }
 
