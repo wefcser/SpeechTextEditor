@@ -137,7 +137,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         //cell content 显示多行
         cell.content.numberOfLines = self.descLines
         cell.content.lineBreakMode = NSLineBreakMode.byTruncatingTail
-
+        
         //date to string
         cell.date.text = date2String(date: keys[indexPath.row])
         cell.content.text = items[keys[indexPath.row]]
